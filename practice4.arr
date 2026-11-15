@@ -80,5 +80,145 @@ where:
   is-popular(Hum) is false
 end
 
+# Skill 5
 
+fun make-positive(lon :: List<Number>) -> List<Number>:
+  doc: "take the absolute value of each number in the list"
+  
+  cases (List) lon:
+    | empty => empty
+    | link(first, rest) =>
+      if first > 0:
+        link(first, make-positive(rest))
+      else:
+        link(0 - first, make-positive(rest))
+      end        
+  end
+where:
+  make-positive([list: ]) is [list: ]
+  make-positive([list: -1, 0, 2]) is [list: 1, 0, 2]
+end
       
+# Using recursion, design a function count-warm that takes a list of numbers and returns a count of numbers greater than 70.
+
+fun count-warm(lon :: List<Number>) -> Number: 
+  doc: "returns count of numbers greater than 70"
+  
+  cases(List) lon:
+    | empty => 0
+    | link(first, rest) => 
+      if first > 70:
+        1 + count-warm(rest)
+      else:
+        count-warm(rest)
+      end
+      
+  end
+where:
+  count-warm([list: 71, 69, 72]) is 2
+  count-warm([list: 70, 80, 20]) is 1
+end
+        
+
+# Using recursion, design a function build-string that takes a list of strings and returns a single large string containing the original strings concatenated together in order.
+
+fun build-string(str :: List<String>) -> String:
+  doc: "returns string"
+  
+  cases(List) str:
+    | empty => ""
+    | link(first, rest) => 
+      first + build-string(rest)
+  end
+  
+where:
+  build-string([list: "Hello"]) is "Hello"
+  build-string([list: "Water and bottle"]) is "Water and bottle"
+  build-string([list: ]) is "" 
+end
+
+#|
+   problem 1:
+   Using recursion, design a function cap-scores that
+   takes a list of test scores and returns a new list
+   where any score above 100 is replaced with 100. All
+   other scores stay the same
+|#
+
+fun cap-scores(scores :: List<Number>) -> List<Number>:
+  doc: "replaces score above 100 with 100"
+  
+  cases(List) scores:
+    | empty => empty
+    | link(first, rest) =>
+      if first > 100:
+        link(100, cap-scores(rest))
+      else:
+        link(first, cap-scores(rest))
+      end
+  end
+  
+where:
+  cap-scores([list: 102, 80, 70, 105]) is [list: 100, 80, 70, 100]
+end
+
+
+#|
+   problem 2:
+   Using recursion, design a function over-time that takes
+   a list of durations (in seconds) and a time limit (in
+   seconds), and returns the sum of all durations that are
+   longer than the time limit.
+|#
+
+fun over-time(durations :: List<Number>, limit :: Number) -> Number:
+
+doc: "returns sum of all durations that are longer than the time limit"
+
+  cases(List) durations:
+    | empty => 0 
+    | link(first, rest) => 
+      if first > limit:
+        first + over-time(rest, limit)
+      else:
+        over-time(rest, limit)
+      end
+  end
+  
+where:
+  over-time([list: ], 60) is 0
+  over-time([list: 30, 45], 60) is 0
+  over-time([list: 90, 30, 120], 60) is 210
+  over-time([list: 60, 61], 60) is 61
+end
+
+
+#|
+   problem 3:
+   Using recursion, design a function count-in-zone that
+   takes a list of heart rates, a low limit, and a high
+   limit, and returns how many heart rates fall within the
+   zone (greater than the low and less than the high)
+|#
+
+fun count-in-zone(rate :: List<Number>, ll :: Number, hl :: Number) -> Number: 
+  
+  doc: "returns how many heart rates fall within the zone"
+  
+  cases(List) rate:
+    | empty => 0
+    | link(first, rest) => 
+      if first > ll:
+        if first < hl:
+          1 + count-in-zone(rest, ll, hl)
+        else:
+          count-in-zone(rest, ll, hl)
+        end
+      else:
+        count-in-zone(rest, ll, hl)
+      end
+  end
+  
+where:
+  count-in-zone([list: 100, 20, 70, 60, 80, 95], 65, 94) is 2
+end
