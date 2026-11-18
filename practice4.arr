@@ -29,29 +29,47 @@ end
 
 data Restaurant:
   | yahoo(name :: String, stars :: Number)
-  | health-score(name :: String, score :: Number) 
+  | health-score(name :: String, score :: Number)
 end
 
 fun is-reputable(r :: Restaurant) -> Boolean:
-  doc: "Returns true if the restaurant is a yahoo with at least 4 stars or a health score with score at least 85"
+  doc: "returns if restaurant is a yahoo with at least 4 stars or healthscore with at least 85"
   
-  cases (Restaurant) r:
-    | yahoo(name, stars) => stars >= 4
-    | health-score(name, score) => score >= 85
+  cases(Restaurant) r:
+    | yahoo(name, stars) => stars > 4
+    | health-score(name, score) => score > 85
   end
-where:
-  burrito = yahoo("Saxbys", 4.2)
-  Pizza = health-score("Marcelos", 80)
-  Burger= yahoo("Mcdonalds", 4)
-  Pasta = health-score("Olio", 85)
-  Rice = health-score("Chinese", 90)
   
-  is-reputable(burrito) is true
-  is-reputable(Pizza) is false
-  is-reputable(Burger) is true
-  is-reputable(Pasta) is true
-  is-reputable(Rice) is true
-end   
+where:
+  burri
+
+
+
+# data Restaurant:
+#   | yahoo(name :: String, stars :: Number)
+#   | health-score(name :: String, score :: Number) 
+# end
+
+# fun is-reputable(r :: Restaurant) -> Boolean:
+#   doc: "Returns true if the restaurant is a yahoo with at least 4 stars or a health score with score at least 85"
+  
+#   cases (Restaurant) r:
+#     | yahoo(name, stars) => stars >= 4
+#     | health-score(name, score) => score >= 85
+#   end
+# where:
+#   burrito = yahoo("Saxbys", 4.2)
+#   Pizza = health-score("Marcelos", 80)
+#   Burger= yahoo("Mcdonalds", 4)
+#   Pasta = health-score("Olio", 85)
+#   Rice = health-score("Chinese", 90)
+  
+#   is-reputable(burrito) is true
+#   is-reputable(Pizza) is false
+#   is-reputable(Burger) is true
+#   is-reputable(Pasta) is true
+#   is-reputable(Rice) is true
+# end   
 
 # Design a data definition for Book that can be either rating with title, stars, and num-reviews, or sales-ranking with title and position. Then, write a function is-popular that returns true if the book is a rating with num-reviews of at least 500, or a sales-ranking with position less than 500.
 
@@ -172,12 +190,11 @@ end
 |#
 
 fun over-time(durations :: List<Number>, limit :: Number) -> Number:
-
-doc: "returns sum of all durations that are longer than the time limit"
-
+  doc: "returns the sum of all durations that are longer than the time limit"
+  
   cases(List) durations:
-    | empty => 0 
-    | link(first, rest) => 
+    | empty => 0
+    | link(first, rest) =>
       if first > limit:
         first + over-time(rest, limit)
       else:
@@ -185,12 +202,27 @@ doc: "returns sum of all durations that are longer than the time limit"
       end
   end
   
-where:
-  over-time([list: ], 60) is 0
-  over-time([list: 30, 45], 60) is 0
-  over-time([list: 90, 30, 120], 60) is 210
-  over-time([list: 60, 61], 60) is 61
-end
+
+# fun over-time(durations :: List<Number>, limit :: Number) -> Number:
+
+# doc: "returns sum of all durations that are longer than the time limit"
+
+#   cases(List) durations:
+#     | empty => 0 
+#     | link(first, rest) => 
+#       if first > limit:
+#         first + over-time(rest, limit)
+#       else:
+#         over-time(rest, limit)
+#       end
+#   end
+  
+# where:
+#   over-time([list: ], 60) is 0
+#   over-time([list: 30, 45], 60) is 0
+#   over-time([list: 90, 30, 120], 60) is 210
+#   over-time([list: 60, 61], 60) is 61
+# end
 
 
 #|
@@ -200,6 +232,7 @@ end
    limit, and returns how many heart rates fall within the
    zone (greater than the low and less than the high)
 |#
+   
 
 fun count-in-zone(rate :: List<Number>, ll :: Number, hl :: Number) -> Number: 
   
@@ -221,4 +254,25 @@ fun count-in-zone(rate :: List<Number>, ll :: Number, hl :: Number) -> Number:
   
 where:
   count-in-zone([list: 100, 20, 70, 60, 80, 95], 65, 94) is 2
+end
+
+    #Design a function count-internal-nodes that, given the BinTree data definition below, takes a BinTree and returns the total number of internal nodes (non-leaf nodes) in the tree
+
+data BinTree<a>:
+  | leaf(val :: a)
+  | node(left :: BinTree<a>, right :: BinTree<a>)
+end
+
+    # Answer meeting expectations:
+
+fun count-internal-nodes(tree :: BinTree) -> Number:
+  doc: "counts the number of nodes that are not leafs"
+  cases (BinTree) tree:
+    | leaf(val) => 0
+    | node(left, right) => 1 + count-internal-nodes(left) + count-internal-nodes(right)
+  end
+where:
+  tree = node(node(leaf(0), leaf(0)), node(node(leaf(0), leaf(0)), leaf(0)))
+  count-internal-nodes(tree) is 4
+  count-internal-nodes(leaf(1)) is 0
 end
